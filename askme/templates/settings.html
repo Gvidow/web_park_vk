@@ -104,97 +104,70 @@
 <main class="flex-shrink-0">
   <div class="container" style="max-width: 90%; margin-right: 0; margin-left:10%">
     <div style="margin-top: 75px; margin-bottom: 20px">
-    <h1 class="mt-5" style="display: inline; margin-right: 30px">New questions</h1>
-    <h3 style="display: inline;"><a href="#" style="text-decoration: none">Hot questions</a></h3>
+    <h1 class="mt-5">Settings: Dr. Pepper</h1>
     </div>
     <div class="row">
 
-<!--      колонка с вопросами-->
+<!--      колонка с формой вопроса-->
       <div class="col-9">
-        <div class="question">
+
+        <form method="post" action="#" enctype="multipart/form-data">
+<!--          login-->
           <div class="row">
-            <div class="col-3">
-              <div class="question-avatar">
-                <img src="../static/img/user1.png" alt="avatar">
-              </div>
-              <div class="div-like">
-                <button class="button-like"><img src="../static/img/like.svg"></button>
-                <span>5</span>
-              </div>
-            </div>
-            <div class="col-8">
-              <h2><a href="#">Awesome question</a></h2>
-              <div class="question-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <a href="#">Answer (3)</a>
-                </div>
-                <div class="col-8">
-                  Tags <a href="#">black_jack</a>, <a href="#">black_jack</a>
-                </div>
-              </div>
+            <div class="col-3">Login</div>
+            <div class="col-5">
+              <input class="form-control me-2 question-text" type="text" name="login">
             </div>
           </div>
-        </div>
-
-        <div class="question">
+<!--          email-->
           <div class="row">
-            <div class="col-3">
-              <div class="question-avatar">
-                <img src="../static/img/user2.jpeg" alt="avatar">
-              </div>
-              <div class="div-like">
-                <button class="button-like"><img src="../static/img/like.svg"></button>
-                <span>5</span>
-              </div>
-            </div>
-            <div class="col-8">
-              <h2><a href="#">Awesome question2</a></h2>
-              <div class="question-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <a href="#">Answer (3)</a>
-                </div>
-                <div class="col-8">
-                  Tags <a href="#">black_jack</a>, <a href="#">black_jack</a>
-                </div>
-              </div>
+            <div class="col-3">Email</div>
+            <div class="col-5">
+              <input class="form-control me-2 question-text" type="email" name="email">
             </div>
           </div>
-        </div>
-
-        <div class="question">
+<!--          nickname-->
           <div class="row">
-            <div class="col-3">
-              <div class="question-avatar">
-                <img src="../static/img/user3.png" alt="avatar">
-              </div>
-              <div class="div-like">
-                <button class="button-like"><img src="../static/img/like.svg"></button>
-                <span>5</span>
-              </div>
-            </div>
-            <div class="col-8">
-              <h2><a href="#">Awesome question3</a></h2>
-              <div class="question-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-              </div>
-              <div class="row">
-                <div class="col-4">
-                  <a href="#">Answer (3)</a>
-                </div>
-                <div class="col-8">
-                  Tags <a href="#">black_jack</a>, <a href="#">black_jack</a>
-                </div>
-              </div>
+            <div class="col-3">NickName</div>
+            <div class="col-5">
+              <input class="form-control me-2 question-text" type="text" name="nickname">
             </div>
           </div>
-        </div>
 
+<!--          password-->
+          <div class="row">
+            <div class="col-3">Password</div>
+            <div class="col-5">
+              <input class="form-control me-2 question-text" type="password" name="password">
+            </div>
+          </div>
+
+<!--          repeat password-->
+          <div class="row">
+            <div class="col-3">Repeat password</div>
+            <div class="col-5">
+              <input class="form-control me-2 question-text" type="password" name="repeat_password">
+            </div>
+          </div>
+
+
+<!--          upload avatar-->
+          <div class="row">
+            <div class="col-3">Upload avatar</div>
+            <div class="col-5">
+              <img id="setting-avatar" src="../static/img/user1.png" alt="avatar">
+              <input style="display: block" type="file" name="avatar">
+            </div>
+          </div>
+
+
+          <div class="row" style="margin-top: 20px">
+            <div class="col-3"></div>
+            <div class="col-5">
+              <button class="btn btn-outline-success" type="submit">Save</button>
+            </div>
+          </div>
+        </form>
       </div>
 
 <!--      колонка с тегами-->
@@ -222,27 +195,6 @@
 
     </div>
 
-
-<!--    Paginator-->
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Previous</span>
-          </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Next</span>
-          </a>
-        </li>
-      </ul>
-  </nav>
 
   </div>
 </main>

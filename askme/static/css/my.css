@@ -2,7 +2,7 @@ main > .container {
   padding: 60px 15px 0;
 }
 
-.question {
+.question, .answer {
     height: 220px;
     border: 2px solid black;
     border-radius: 10px;
@@ -10,18 +10,18 @@ main > .container {
     margin-bottom: 10px;
 }
 
-.question-avatar {
+.question-avatar, .answer-avatar {
     height: 150px;
     width: 150px;
 }
-.question-avatar > img {
+.question-avatar > img, .answer-avatar > img {
     height: 100%;
     width: 100%;
     object-fit: cover;
     border-radius: 50%;
 }
 
-.question-text {
+.question-text, .answer-text {
   margin-bottom: 5%;
 }
 
@@ -70,5 +70,17 @@ main > .container {
 .button-like > img{
     width: 100%;
     height: 100%;
+}
+
+.correct {
+  margin-top: 25px;
+  margin-right: 10px;
+}
+
+#setting-avatar {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
