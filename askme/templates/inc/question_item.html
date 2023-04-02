@@ -1,0 +1,28 @@
+{% load static %}
+<div class="question">
+  <div class="row">
+    <div class="col-3">
+      <div class="question-avatar">
+        <img src="{% static question.avatar %}" alt="avatar">
+      </div>
+      <div class="div-like">
+        <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
+        <span>5</span>
+      </div>
+    </div>
+    <div class="col-8">
+      <h2><a href="{% url 'question' question.id %}">{{ question.title }}</a></h2>
+      <div class="question-text">
+      {{ question.text }}
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <a href="#">Answer (3)</a>
+        </div>
+        <div class="col-8">
+          Tags <a href="#">black_jack</a>, <a href="#">black_jack</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

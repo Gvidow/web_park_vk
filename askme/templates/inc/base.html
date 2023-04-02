@@ -12,13 +12,8 @@
     <title>Askme</title>
 
 
-
-
-
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" crossorigin="anonymous">
 <link href="{% static 'css/additional.css' %}" rel="stylesheet">
-
-
 
     <!-- Custom styles for this template -->
     <link href="{% static 'css/my.css' %}" rel="stylesheet">
@@ -79,7 +74,7 @@
 <header>
   <!-- Fixed navbar -->
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div class="container-fluid" style="height: 70px">
+    <div class="container-fluid" style="height: 100px">
       <a style="width: 20%; justify-content: center; display: flex;" class="navbar-brand" href="#"><h1>Askme</h1></a>
       <div class="collapse navbar-collapse" id="navbarCollapse" style="height: 100%">
         <form class="d-flex" role="search" style="width: 90%; height: 50%">
@@ -88,9 +83,7 @@
         </form>
       </div>
       <div id="info-user">
-        <div class="navbar-brand">
-          <a href="#">log in</a><a href="#">register</a>
-        </div>
+        {% block info-user %} {% endblock %}
       </div>
     </div>
   </nav>
@@ -100,51 +93,15 @@
 <main class="flex-shrink-0">
   <div class="container" style="max-width: 90%; margin-right: 0; margin-left:10%">
     <div style="margin-top: 75px; margin-bottom: 20px">
-    <h1 class="mt-5" style="display: inline; margin-right: 30px">New question</h1>
+      {% block first-row %} {% endblock %}
     </div>
     <div class="row">
 
-<!--      колонка с формой вопроса-->
+<!--      колонка с вопросами-->
       <div class="col-9">
+        {% block content %} {% endblock %}
 
-
-
-        <form method="post" action="#">
-<!--          title-->
-          <div class="row">
-            <div class="col-2">Title</div>
-            <div class="col-9">
-              <input class="form-control me-2 question-text" type="search" name="title">
-            </div>
-          </div>
-<!--          text-->
-          <div class="row">
-            <div class="col-2">Text</div>
-            <div class="col-9">
-              <textarea class="form-control me-2 question-text" type="search" rows = "15" name="text" style="resize: none; width: 100%"></textarea>
-            </div>
-          </div>
-<!--          tags-->
-          <div class="row">
-            <div class="col-2">Tags</div>
-            <div class="col-9">
-              <input class="form-control me-2 question-text" name="tags" type="search">
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-2"></div>
-            <div class="col-9">
-              <button class="btn btn-outline-success" type="submit">Ask</button>
-            </div>
-          </div>
-        </form>
       </div>
-
-
-
-
-
-
 
 <!--      колонка с тегами-->
       <div class="col-3">
