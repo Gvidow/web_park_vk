@@ -16,17 +16,17 @@
   <div class="row">
     <div class="col-3">
       <div class="question-avatar">
-        <img src="../static/img/user1.png" alt="avatar">
+        <img src="{% static question.author.avatar %}" alt="avatar">
       </div>
       <div class="div-like">
-        <button class="button-like"><img src="../static/img/like.svg"></button>
+        <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
         <span>5</span>
       </div>
     </div>
     <div class="col-8">
-      <h2>Awesome question {{ question_id }} </h2>
+      <h2> {{ question.title }} </h2>
       <div class="question-text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
+          {{ question.text }}
       </div>
       <div>
         Tags <a href="#">black_jack</a>, <a href="#">black_jack</a>
@@ -38,71 +38,10 @@
   <hr class="my-4">
 
   <!--          ответы -->
-  <div class="answer">
-  <div class="row">
-    <div class="col-3">
-      <div class="answer-avatar">
-        <img src="../static/img/user1.png" alt="avatar">
-      </div>
-      <div class="div-like">
-        <button class="button-like"><img src="../static/img/like.svg"></button>
-        <span>5</span>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="answer-text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-      </div>
-      <div class="row">
-        <p><input class="correct" type="checkbox" name="correct" value="true">Correct!</p>
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <div class="answer">
-  <div class="row">
-    <div class="col-3">
-      <div class="answer-avatar">
-        <img src="../static/img/user2.jpeg" alt="avatar">
-      </div>
-      <div class="div-like">
-        <button class="button-like"><img src="../static/img/like.svg"></button>
-        <span>5</span>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="answer-text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-      </div>
-      <div class="row">
-        <p><input class="correct" type="checkbox" name="correct" value="true">Correct!</p>
-      </div>
-    </div>
-  </div>
-  </div>
-
-  <div class="answer">
-  <div class="row">
-    <div class="col-3">
-      <div class="answer-avatar">
-        <img src="../static/img/user3.png" alt="avatar">
-      </div>
-      <div class="div-like">
-        <button class="button-like"><img src="../static/img/like.svg"></button>
-        <span>5</span>
-      </div>
-    </div>
-    <div class="col-8">
-      <div class="answer-text">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla est ullamcorper eget nulla. Habitasse platea dictumst quisque sagittis purus sit amet volutpat.
-      </div>
-      <div class="row">
-        <p><input class="correct" type="checkbox" name="correct" value="true">Correct!</p>
-      </div>
-    </div>
-  </div>
-  </div>
+  
+  {% for response in responses %}
+    {% include "inc/answer_item.html" %}
+  {% endfor %}
 
   <!-- add answer-->
   <hr class="my-4">

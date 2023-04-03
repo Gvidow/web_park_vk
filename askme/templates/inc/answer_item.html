@@ -1,0 +1,23 @@
+{% load static %}
+
+<div class="answer">
+    <div class="row">
+        <div class="col-3">
+        <div class="answer-avatar">
+            <img src="{% static response.author.avatar %}" alt="avatar">
+        </div>
+        <div class="div-like">
+            <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
+            <span>{{ response.count_like }}</span>
+        </div>
+        </div>
+        <div class="col-8">
+        <div class="answer-text">
+         {{ response.text }}
+        </div>
+        <div class="row">
+            <p><input class="correct" type="checkbox" name="correct" value="true">Correct!</p>
+        </div>
+        </div>
+    </div>
+</div>
