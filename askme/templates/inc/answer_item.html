@@ -1,22 +1,22 @@
 {% load static %}
 
-<div class="answer">
+<div class="answer" style="height: auto">
     <div class="row">
         <div class="col-3">
         <div class="answer-avatar">
-            <img src="{% static response.author.avatar %}" alt="avatar">
+            <img src="{% static answer.author.avatar %}" alt="avatar">
         </div>
         <div class="div-like">
             <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
-            <span>{{ response.count_like }}</span>
+            <span>{{ answer.count_like }}</span>
         </div>
         </div>
         <div class="col-8">
-        <div class="answer-text">
-         {{ response.text }}
+        <div style="min-height: 140px">
+         {{ answer.text }}
         </div>
         <div class="row">
-            <p><input class="correct" type="checkbox" name="correct" value="true">Correct!</p>
+            <p><input class="correct" type="checkbox" name="correct" value="true" {% if answer.correct %} checked {% endif %}>Correct!</p>
         </div>
         </div>
     </div>

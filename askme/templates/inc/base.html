@@ -74,8 +74,8 @@
 <header>
   <!-- Fixed navbar -->
   <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <div class="container-fluid" style="height: 100px">
-      <a style="width: 20%; justify-content: center; display: flex;" class="navbar-brand" href="#"><h1>Askme</h1></a>
+    <div class="container-fluid" style="height: 70px">
+      <a style="width: 20%; justify-content: center; display: flex;" class="navbar-brand" href="{% url 'index' %}"><h1>Askme</h1></a>
       <div class="collapse navbar-collapse" id="navbarCollapse" style="height: 100%">
         <form class="d-flex" role="search" style="width: 90%; height: 50%">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" style="width: 80%; font-size: 1.4rem">
@@ -107,21 +107,14 @@
       <div class="col-3">
         <h3 style="justify-content: center; display: flex">Popular tags</h3>
         <div class="tags-question">
-          <a href="#">perl</a>
-          <a href="#">python</a>
-          <a href="#">Go</a>
-          <a href="#">C++</a>
-          <a href="#">MySql</a>
-          <a href="#">rust</a>
-          <a href="#">JavaScript</a>
-          <a href="#">Django</a>
+          {% for tag in tags %}
+            <a href="{% url 'tag' tag %}">{{ tag }}</a>
+          {% endfor %}
         </div>
         <h3 style="justify-content: center; display: flex; margin-top: 20px">Best members</h3>
-        <a class="members" href="#">Mr. Freeman</a>
-        <a class="members" href="#">Dr. House</a>
-        <a class="members" href="#">Bender</a>
-        <a class="members" href="#">Queen Victoria</a>
-        <a class="members" href="#">V. Pupkin</a>
+        {% for member in best_members %}
+             <a class="members" href="#">{{ member }}</a>
+        {% endfor %}
       </div>
 
 
@@ -129,6 +122,7 @@
     </div>
 
   </div>
+  <div style="height: 30px"></div>
 </main>
 
 
