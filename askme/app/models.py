@@ -46,6 +46,9 @@ def get_user(ok):
         return None
     elif ok is True:
         return USERS[randint(0, COUNT_USERS - 1)]
+    ok = int(ok)
+    if ok < 0 or ok >= len(USERS):
+        return None
     return USERS[int(ok)]
 
     
@@ -80,7 +83,7 @@ def question_by_tag(tag):
 gen = Faker()
 
 COUNT_USERS = 6
-COUNT_QUESTION = 10
+COUNT_QUESTION = 50
 COUNT_ANSWER = 30
 
 PICTURES = ["img/user3.png", "img/user2.jpeg", "img/user3.png", "img/user4.jpg", "img/user5.jpg",

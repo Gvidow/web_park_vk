@@ -14,8 +14,8 @@
 <div id="wrong_password" class="pole">
     Sorry, wrong password!
 </div>
-<!--здесь должен быть метод post но с ним без cookies не получалось-->
-<form class="needs-validation" novalidate="" method="get" action="{% url 'index' %}">
+
+<form class="needs-validation" novalidate="" method="post" action="{% url 'index' %}" name="login">
   <div class="row pole">
     <div class="col-2">
       Login

@@ -15,8 +15,7 @@
 </div>
 
 
-<!--здесь должен быть метод post но с ним без cookies не получалось-->
-<form method="get" action="{% url 'index' %}" enctype="multipart/form-data">
+<form method="post" action="{% url 'index' %}" enctype="multipart/form-data" name="signup">
 <!--          login-->
   <div class="row">
     <div class="col-3">Login</div>

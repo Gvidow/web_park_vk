@@ -27,7 +27,7 @@ main > .container {
 }
 
 #info-user {
-    width: 30%;
+    width: auto;
 }
 
 #avatar-info-user {
@@ -92,4 +92,8 @@ main > .container {
 
 #wrong_password {
     color: red;
+}
+
+#current {
+    background: rgba(13, 110, 253, 0.4);
 }
