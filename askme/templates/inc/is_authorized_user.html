@@ -1,8 +1,8 @@
 {% load static %}
 
-<img id="avatar-info-user" src="{% static user_data.avatar %}" alt="avatar">
+<img id="avatar-info-user" src="{{ user_data.avatar.url }}" alt="avatar">
 <div class="navbar-brand">
-  {{ user_data.name }}
+  {{ user_data.user.first_name }} {{ user_data.user.last_name }}
 </div>
 <div class="navbar-brand">
   <a href="{% url 'settings' user_data.id %}">settings</a><a href="{% url 'logout' %}">log out</a>

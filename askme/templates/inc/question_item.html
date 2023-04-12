@@ -3,25 +3,25 @@
   <div class="row">
     <div class="col-3">
       <div class="question-avatar">
-        <img src="{% static question.author.avatar %}" alt="avatar">
+        <img src="{{ question.0.author.avatar.url }}" alt="avatar">
       </div>
       <div class="div-like">
         <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
-        <span>{{ question.count_like }}</span>
+        <span>{{ question.2 }}</span>
       </div>
     </div>
     <div class="col-8">
-      <h2><a href="{% url 'question' question.id %}">{{ question.title }}</a></h2>
+      <h2><a href="{% url 'question' question.0.id %}">{{ question.0.title }}</a></h2>
       <div class="question-text">
-      {{ question.text|truncatechars:250 }}
+      {{ question.0.text|truncatechars:250 }}
       </div>
       <div class="row">
         <div class="col-4">
-          <a href="{% url 'question' question.id %}">Answer ({{ question.count_answer }})</a>
+          <a href="{% url 'question' question.0.id %}">Answer ({{ question.1 }})</a>
         </div>
         <div class="col-8">
           Tags
-          {% for tag in question.tags %} <a href="{% url 'tag' tag %}">{{ tag }}</a> {% endfor %}
+          {% for tag in question.0.tags.all %} <a href="{% url 'tag' tag %}">{{ tag.name }}</a> {% endfor %}
         </div>
       </div>
     </div>

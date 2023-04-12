@@ -114,7 +114,7 @@
         </div>
         <h3 style="justify-content: center; display: flex; margin-top: 20px">Best members</h3>
         {% for member in best_members %}
-             <a class="members" href="#">{{ member }}</a>
+             <a class="members" href="{% url 'best' member.id %}">{{ member.user.first_name }} {{ member.user.last_name }}</a>
         {% endfor %}
       </div>
 

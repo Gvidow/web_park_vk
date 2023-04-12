@@ -54,7 +54,7 @@
   <div class="row pole">
     <div class="col-3">Upload avatar</div>
     <div class="col-5">
-      <img id="setting-avatar" src="{% static user_data.avatar %}" alt="avatar">
+      <img id="setting-avatar" src="{{ user_data.avatar.url }}" alt="avatar">
       <input style="display: block" type="file" name="avatar">
     </div>
   </div>
