@@ -1,11 +1,14 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
-from django.contrib import auth, redirects
+from django.contrib import auth
 from django.db.models import ObjectDoesNotExist
-from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from .models import Question, Tag, Answer, Profile
-from .models import AUTHORIZED, log_in, log_out, get_user
+from .models import log_out, get_user
+from django.shortcuts import redirect
+from django.urls import reverse
+from .forms import LoginForm
+from django.contrib.auth import login
 
 
 def paginate(objects_list, request, per_page=10):
@@ -14,7 +17,6 @@ def paginate(objects_list, request, per_page=10):
     return paginator.get_page(page_number)
 
 
-@csrf_exempt
 def index(request):
     questions = Question.objects.get_questions_all()
     TAGS = Tag.objects.all()[:20]
@@ -27,7 +29,6 @@ def index(request):
     return render(request, "index.html", context)
 
 
-@csrf_exempt
 def question(request, id):
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
@@ -45,7 +46,6 @@ def question(request, id):
     return render(request, "question.html", context)
 
 
-@csrf_exempt
 def setting(request, id):
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
@@ -64,25 +64,25 @@ def logout(request):
     return HttpResponseRedirect('/')
 
 
-def login(request):
-    login_form = LoginForm(request.POST)
-    if login_form.is_valid():
-        user = auth.authenticate(request, request.POST)
-        if user:
-            login(request, user)
-            return redirects(reverse('index'),)
+def log_in(request):
+    print(request.GET)
+    print(request.POST)
+    if request.method == "GET":
+        login_form = LoginForm()
+    elif request.method == "POST":
+        login_form = LoginForm(request.POST)
+        if login_form.is_valid():
+            user = auth.authenticate(request, **login_form.cleaned_data)
+            if user:
+                login(request, user)
+                return redirect(reverse('index'))
 
-
-    return render(request, "login.html")
-
-
-
-    log_in()
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
     context = {
         "tags": TAGS,
         "best_members": MEMBERS,
+        "form": login_form,
     }
     return render(request, "login.html", context)
 

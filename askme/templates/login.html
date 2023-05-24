@@ -16,24 +16,10 @@
 </div>
 
 <form class="needs-validation" novalidate="" method="post" action="{% url 'login' %}" name="login">
-  <div class="row pole">
-    <div class="col-2">
-      Login
-    </div>
-    <div class="col-5">
-      <input type="text" class="form-control" id="firstName" placeholder="" value="" required="">
-    </div>
-  </div>
+  {% csrf_token %}
+  {{ form }}
+  <button class="btn btn-primary btn-lg" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Log in!</font></font></button>
 
-  <div class="row pole">
-    <div class="col-2">
-      Password
-    </div>
-    <div class="col-5">
-      <input type="password" class="form-control pole" id="lastName" placeholder="" value="" required="">
-      <button class="btn btn-primary btn-lg" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Log in!</font></font></button>
-    </div>
-  </div>
 
   <hr class="my-3">
   <div class="row"><div class="col-2"></div><div class="col-5"><a href="{% url 'signup' %}">Create new account</a></div></div>
