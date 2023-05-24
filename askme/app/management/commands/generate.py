@@ -1,3 +1,5 @@
+import random
+
 from app.models import Like, Tag, User, Profile, Question, Answer
 from django.utils import timezone
 from datetime import timedelta
@@ -28,45 +30,62 @@ def fill(ratio):
     avatars = [f"static/img/avatar/user{avatar}" for avatar in avatars]
 
     # TAG
-    tags = [Tag(name=gen.word()[:20]) for _ in range(Count.TAGS)]
+    last_tag = Tag.objects.only("id").order_by("-id")
+    try:
+        last_id = last_tag[0].id
+    except IndexError:
+        last_id = 0
+    tags = [Tag(id=i, name=gen.word()[:20] + str(i)) for i in range(last_id + 1, last_id + 1 + Count.TAGS)]
     Tag.objects.bulk_create(tags)
 
     # USER
-    users = [User(username=f"username{i}", first_name=gen.first_name(), last_name=gen.last_name(),
-                  password=gen.password()) for i in range(Count.USERS)]
+    # get last user
+    last_user = User.objects.only("id").order_by("-id")
+    try:
+        last_id = last_user[0].id
+    except IndexError:
+        last_id = 0
+    users = [User(id=i, username=f"username{i}", first_name=gen.first_name(), last_name=gen.last_name(),
+                  password=gen.password()) for i in range(last_id + 1, last_id + 1 + Count.USERS)]
     User.objects.bulk_create(users)
-    users = User.objects.exclude(is_superuser=True)
+
+    users = User.objects.exclude(is_superuser=True).filter(id__gt=last_id)
     profiles = [Profile(user=user, avatar=choice(avatars)) for user in users]
     Profile.objects.bulk_create(profiles)
 
     profiles = Profile.objects.all()
-    # likes = Like.objects.all()
+    count_profiles = len(profiles)
     tags = Tag.objects.all()
-
-    # LIKE
-    likes = [Like(to_whom=choice(profiles), from_whom=choice(profiles)) for _ in range(Count.CONTENT_LIKES)]
-    Like.objects.bulk_create(likes)
 
     # QUESTION
     questions = [Question(author=choice(profiles),
                           title=f"Question{i}",
                           text=gen.text(),
-                          #like=likes[i],
                           ) for i in range(Count.QUESTIONS)]
     Question.objects.bulk_create(questions)
-    questions = Question.objects.all()
-    for i in range(Count.QUESTIONS):
-        questions[i].tags.set([tags[i * randint(1, 10) % Count.TAGS] for _ in range(randint(1, 4))])
-
     questions = Question.objects.all()
 
     # ANSWER
     answers = [Answer(author=choice(profiles),
                       question=choice(questions),
                       text=gen.text(),
-                      # like=likes[i],
                       correct=choice([True, False]),
-                      ) for i in range(Count.QUESTIONS)]
+                      ) for _ in range(Count.QUESTIONS)]
     Answer.objects.bulk_create(answers)
 
+    # LIKE FOR QUESTION
+    count_question_with_likes = randint(0, Count.CONTENT_LIKES)
+    likes = [Like(from_whom=profiles[i % count_profiles], question=random.choice(list(set(questions) - set(profiles[i % count_profiles].questions.all()))),
+                  event=choice(("+", "+")))
+             for i in range(count_question_with_likes)]
+    Like.objects.bulk_create(likes)
+
+    # LIKE FOR ANSWER
+    likes = [Like(from_whom=profiles[i % count_profiles], answer=random.choice(list(set(answers) - set(profiles[i % count_profiles].answers.all()))),
+                  event=choice(("+", "+")))
+             for i in range(count_question_with_likes, Count.CONTENT_LIKES)]
+    Like.objects.bulk_create(likes)
+
+    for i in range(Count.QUESTIONS):
+        questions[i].tags.set([tags[i * randint(1, 10) % Count.TAGS] for _ in range(randint(1, 4))])
 

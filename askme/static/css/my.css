@@ -97,3 +97,11 @@ main > .container {
 #current {
     background: rgba(13, 110, 253, 0.4);
 }
+
+.div-valuation {
+    margin-top: 10px;
+    display: flex;
+}
+.valuation {
+    margin-left: 15px;
+}

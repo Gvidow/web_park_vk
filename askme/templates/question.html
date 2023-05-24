@@ -18,10 +18,9 @@
       <div class="question-avatar">
         <img src="{{ question.author.avatar.url }}" alt="avatar">
       </div>
-      <div class="div-like">
-        <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
-        <span>{{ count_like }}</span>
-      </div>
+
+      {% include "inc/valuation.html" %}
+
     </div>
     <div class="col-8">
       <h2> {{ question.title }} </h2>
