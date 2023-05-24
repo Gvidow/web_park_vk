@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
+from django.contrib import auth, redirects
 from django.db.models import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseRedirect, HttpResponseNotFound
@@ -64,6 +65,18 @@ def logout(request):
 
 
 def login(request):
+    login_form = LoginForm(request.POST)
+    if login_form.is_valid():
+        user = auth.authenticate(request, request.POST)
+        if user:
+            login(request, user)
+            return redirects(reverse('index'),)
+
+
+    return render(request, "login.html")
+
+
+
     log_in()
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
