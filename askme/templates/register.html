@@ -16,6 +16,7 @@
 
 
 <form method="post" action="{% url 'index' %}" enctype="multipart/form-data" name="signup">
+  {% csrf_token %}
 <!--          login-->
   <div class="row">
     <div class="col-3">Login</div>

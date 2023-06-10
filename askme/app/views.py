@@ -13,7 +13,6 @@ def paginate(objects_list, request, per_page=10):
     return paginator.get_page(page_number)
 
 
-@csrf_exempt
 def index(request):
     questions = Question.objects.get_questions_all()
     TAGS = Tag.objects.all()[:20]
@@ -26,7 +25,6 @@ def index(request):
     return render(request, "index.html", context)
 
 
-@csrf_exempt
 def question(request, id):
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
@@ -38,13 +36,12 @@ def question(request, id):
     context = {
         "question": question,
         "user_data": get_user(),
-        "answers": answers,
+        "page_obj": paginate(answers, request),
         "tags": TAGS, "best_members": MEMBERS,
     }
     return render(request, "question.html", context)
 
 
-@csrf_exempt
 def setting(request, id):
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()

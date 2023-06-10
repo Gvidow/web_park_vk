@@ -16,6 +16,7 @@
 </div>
 
 <form class="needs-validation" novalidate="" method="post" action="{% url 'index' %}" name="login">
+  {% csrf_token %}
   <div class="row pole">
     <div class="col-2">
       Login

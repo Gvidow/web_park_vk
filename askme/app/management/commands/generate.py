@@ -54,7 +54,6 @@ def fill(ratio):
     Profile.objects.bulk_create(profiles)
 
     profiles = Profile.objects.all()
-    count_profiles = len(profiles)
     tags = Tag.objects.all()
 
     # QUESTION
@@ -65,27 +64,25 @@ def fill(ratio):
     Question.objects.bulk_create(questions)
     questions = Question.objects.all()
 
+    for i in range(Count.QUESTIONS):
+        questions[i].tags.set([tags[i * randint(1, 10) % Count.TAGS] for _ in range(randint(1, 4))])
+
     # ANSWER
     answers = [Answer(author=choice(profiles),
                       question=choice(questions),
                       text=gen.text(),
                       correct=choice([True, False]),
-                      ) for _ in range(Count.QUESTIONS)]
+                      ) for _ in range(Count.ANSWERS)]
     Answer.objects.bulk_create(answers)
 
     # LIKE FOR QUESTION
-    count_question_with_likes = randint(0, Count.CONTENT_LIKES)
-    likes = [Like(from_whom=profiles[i % count_profiles], question=random.choice(list(set(questions) - set(profiles[i % count_profiles].questions.all()))),
-                  event=choice(("+", "+")))
-             for i in range(count_question_with_likes)]
+    likes = [Like(from_whom=users[i // 100].profile,
+                  question=questions[i // 10],
+                  event=choice(("+", "-")))
+             for i in range(Count.CONTENT_LIKES // 2)]
     Like.objects.bulk_create(likes)
 
-    # LIKE FOR ANSWER
-    likes = [Like(from_whom=profiles[i % count_profiles], answer=random.choice(list(set(answers) - set(profiles[i % count_profiles].answers.all()))),
-                  event=choice(("+", "+")))
-             for i in range(count_question_with_likes, Count.CONTENT_LIKES)]
+    # LIKE FOR QUESTION
+    likes = [Like(from_whom=users[i % Count.USERS].profile, answer=answers[i],
+                  event=choice(("+", "-"))) for i in range(Count.CONTENT_LIKES // 2)]
     Like.objects.bulk_create(likes)
-
-    for i in range(Count.QUESTIONS):
-        questions[i].tags.set([tags[i * randint(1, 10) % Count.TAGS] for _ in range(randint(1, 4))])
-

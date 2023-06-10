@@ -43,14 +43,11 @@ class Like(models.Model):
         unique_together = [('from_whom', 'question'), ('from_whom', 'answer')]
 
     def __str__(self):
-        return f"From {self.from_whom.username} to \
-            {'Q'+self.question if self.question is not None else 'A' + self.answer}"
-
-
+        return f"{dict(self.choice)[self.event]} from {self.from_whom.user.username} to \
+            {'Q'+str(self.question) if self.question is not None else 'A' + str(self.answer)}"
 
 
 class QuestionManager(Manager):
-
     def get_by_id(self, id: int):
         return Question.objects.get(id=id)
     def get_questions_all(self):
@@ -77,10 +74,10 @@ class Question(models.Model):
         return f"{self.title} from {self.author.user.username} {self.id=}"
 
     def count_like(self):
-        return len(self.likes.filter(event="like"))
+        return len(self.likes.filter(event="+"))
 
     def count_dislike(self):
-        return len(self.likes.filter(event="dislike"))
+        return len(self.likes.filter(event="-"))
 
     def count_answer(self):
         return len(self.answers.all())
@@ -99,6 +96,15 @@ class Answer(models.Model):
     correct = models.BooleanField(default=False)
 
     objects = AnswerManage()
+
+    def __str__(self):
+        return f"{self.author.user.username} {self.id=}"
+
+    def count_like(self):
+        return len(self.likes.filter(event="+"))
+
+    def count_dislike(self):
+        return len(self.likes.filter(event="-"))
 
 
 class AUTHORIZED:
