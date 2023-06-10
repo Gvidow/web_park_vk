@@ -11,6 +11,7 @@
 
 {% block content %}
 <form method="post" action="#" enctype="multipart/form-data" name="settings">
+  {% csrf_token %}
 <!--          login-->
   <div class="row pole">
     <div class="col-3">Login</div>

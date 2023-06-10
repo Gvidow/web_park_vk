@@ -15,6 +15,7 @@
 
 {% block content %}
 <form method="post" action="{% url 'index' %}" name="ask">
+  {% csrf_token %}
 <!--          title-->
   <div class="row">
     <div class="col-2">Title</div>

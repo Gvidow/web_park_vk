@@ -40,7 +40,7 @@ def question(request, id):
     context = {
         "question": question,
         "user_data": get_user(),
-        "answers": answers,
+        "page_obj": paginate(answers, request),
         "tags": TAGS, "best_members": MEMBERS,
     }
     return render(request, "question.html", context)
