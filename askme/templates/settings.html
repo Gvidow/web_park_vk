@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block info-user %}
   {% include "inc/is_authorized_user.html" %}
@@ -10,62 +11,17 @@
 {% endblock %}
 
 {% block content %}
-<form method="post" action="#" enctype="multipart/form-data" name="settings">
-  {% csrf_token %}
-<!--          login-->
-  <div class="row pole">
-    <div class="col-3">Login</div>
-    <div class="col-5">
-      <input class="form-control me-2" type="text" name="login">
-    </div>
-  </div>
-<!--          email-->
-  <div class="row pole">
-    <div class="col-3">Email</div>
-    <div class="col-5">
-      <input class="form-control me-2" type="email" name="email">
-    </div>
-  </div>
-<!--          nickname-->
-  <div class="row pole">
-    <div class="col-3">NickName</div>
-    <div class="col-5">
-      <input class="form-control me-2" type="text" name="nickname">
-    </div>
-  </div>
+<div>
+  <form method="post" action="{% url 'settings' %}" enctype="multipart/form-data" name="settings">
+    {% csrf_token %}
+    {% bootstrap_form form %}
 
-<!--          password-->
-  <div class="row pole">
-    <div class="col-3">Password</div>
-    <div class="col-5">
-      <input class="form-control me-2" type="password" name="password">
+    <div class="row pole">
+      <div class="col-3"></div>
+      <div class="col-5">
+        <button class="btn btn-outline-success" type="submit">Save</button>
+      </div>
     </div>
-  </div>
-
-<!--          repeat password-->
-  <div class="row pole">
-    <div class="col-3">Repeat password</div>
-    <div class="col-5">
-      <input class="form-control me-2" type="password" name="repeat_password">
-    </div>
-  </div>
-
-
-<!--          upload avatar-->
-  <div class="row pole">
-    <div class="col-3">Upload avatar</div>
-    <div class="col-5">
-      <img id="setting-avatar" src="{{ user_data.avatar.url }}" alt="avatar">
-      <input style="display: block" type="file" name="avatar">
-    </div>
-  </div>
-
-
-  <div class="row pole">
-    <div class="col-3"></div>
-    <div class="col-5">
-      <button class="btn btn-outline-success" type="submit">Save</button>
-    </div>
-  </div>
-</form>
+  </form>
+</div>
 {% endblock %}

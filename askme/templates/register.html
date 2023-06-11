@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block info-user %}
   {% include "inc/not_authorized_user.html" %}
@@ -10,66 +11,15 @@
 {% endblock %}
 
 {% block content %}
-<div id="address_exists" style="margin-top: 10px; margin-bottom: 10px; color: red">
-    Sorry, this email address already registred!
+<div style="width: 50%">
+    <form method="post" action="{% url 'signup' %}" enctype="multipart/form-data" name="signup">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div class="row" style="margin-top: 20px">
+        <div class="col-5">
+          <button class="btn btn-outline-success" type="submit">Register</button>
+        </div>
+      </div>
+    </form>
 </div>
-
-
-<form method="post" action="{% url 'index' %}" enctype="multipart/form-data" name="signup">
-  {% csrf_token %}
-<!--          login-->
-  <div class="row">
-    <div class="col-3">Login</div>
-    <div class="col-5">
-      <input class="form-control me-2 pole" type="text" name="login">
-    </div>
-  </div>
-<!--          email-->
-  <div class="row">
-    <div class="col-3">Email</div>
-    <div class="col-5">
-      <input class="form-control me-2 pole" type="email" name="email">
-    </div>
-  </div>
-<!--          nickname-->
-  <div class="row">
-    <div class="col-3">NickName</div>
-    <div class="col-5">
-      <input class="form-control me-2 pole" type="text" name="nickname">
-    </div>
-  </div>
-
-<!--          password-->
-  <div class="row">
-    <div class="col-3">Password</div>
-    <div class="col-5">
-      <input class="form-control me-2 pole" type="password" name="password">
-    </div>
-  </div>
-
-<!--          repeat password-->
-  <div class="row">
-    <div class="col-3">Repeat password</div>
-    <div class="col-5">
-      <input class="form-control me-2 pole" type="password" name="repeat_password">
-    </div>
-  </div>
-
-
-<!--          upload avatar-->
-  <div class="row">
-    <div class="col-3">Upload avatar</div>
-    <div class="col-5">
-      <input type="file" name="avatar">
-    </div>
-  </div>
-
-
-  <div class="row" style="margin-top: 20px">
-    <div class="col-3"></div>
-    <div class="col-5">
-      <button class="btn btn-outline-success" type="submit">Register</button>
-    </div>
-  </div>
-</form>
 {% endblock %}
