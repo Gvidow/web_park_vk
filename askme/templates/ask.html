@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block info-user %}
     {% if user_data %}
@@ -14,29 +15,9 @@
 {% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'index' %}" name="ask">
+<form method="post" action="{% url 'ask' %}" name="ask">
   {% csrf_token %}
-<!--          title-->
-  <div class="row">
-    <div class="col-2">Title</div>
-    <div class="col-9">
-      <input class="form-control me-2 pole" type="search" name="title">
-    </div>
-  </div>
-<!--          text-->
-  <div class="row">
-    <div class="col-2">Text</div>
-    <div class="col-9">
-      <textarea class="form-control me-2 pole" type="search" rows = "15" name="text" style="resize: none; width: 100%"></textarea>
-    </div>
-  </div>
-<!--          tags-->
-  <div class="row">
-    <div class="col-2">Tags</div>
-    <div class="col-9">
-      <input class="form-control me-2 pole" name="tags" type="search">
-    </div>
-  </div>
+  {% bootstrap_form form %}
   <div class="row">
     <div class="col-2"></div>
     <div class="col-9">

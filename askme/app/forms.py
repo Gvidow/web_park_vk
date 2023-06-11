@@ -86,8 +86,9 @@ class ProfileEditForm(forms.ModelForm):
             profile.avatar = avatar
             profile.save()
 
-    class QuestionForm(forms.ModelForm):
-        class Meta:
-            model = Question
-            fields = ["title", "text", "tags"]
+
+class QuestionForm(forms.ModelForm):
+    class Meta:
+        model = Question
+        fields = ["title", "text", "tags"]
 

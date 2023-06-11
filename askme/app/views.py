@@ -5,7 +5,7 @@ from django.db.models import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from .models import Question, Tag, Answer, Profile
 from django.urls import reverse
-from .forms import LoginForm, RegisterForm, ProfileEditForm
+from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -137,11 +137,14 @@ def search_by_tag(request, tag: str):
 
 @login_required(login_url="login", redirect_field_name="continue")
 def ask(request):
+    if request.method == "GET":
+        question_form = QuestionForm()
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
     context = {
         "tags": TAGS,
-        "best_members": MEMBERS
+        "best_members": MEMBERS,
+        "form": question_form,
     }
     if request.user.is_authenticated:
         context["user_data"] = request.user
