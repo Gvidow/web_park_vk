@@ -1,7 +1,6 @@
 from django.db import models
-from django.db.models import Manager, Count, UniqueConstraint
+from django.db.models import Manager, Count
 from django.contrib.auth.models import User
-from random import choice
 from django.utils import timezone
 from datetime import timedelta
 
@@ -105,22 +104,3 @@ class Answer(models.Model):
 
     def count_dislike(self):
         return len(self.likes.filter(event="-"))
-
-
-class AUTHORIZED:
-    status = True
-    user = None
-
-
-def get_user():
-    return AUTHORIZED.user
-
-
-def log_out():
-    AUTHORIZED.status = False
-    AUTHORIZED.user = None
-
-
-def log_in():
-    AUTHORIZED.status = True
-    AUTHORIZED.user = choice(Profile.objects.all())

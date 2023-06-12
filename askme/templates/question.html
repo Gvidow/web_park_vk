@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 
 {% block info-user %}
@@ -50,7 +51,8 @@
 
   <form method="post" action="#" style="margin-bottom: 10px" name="question">
     {% csrf_token %}
-    <textarea class="form-control me-2" type="search" rows="8" name="answer" style="resize: none; width: 100%; margin-bottom: 20px" placeholder="Enter your answer here..."></textarea>
+    {% bootstrap_form form %}
+<!--    <textarea class="form-control me-2" type="search" rows="8" name="answer" style="resize: none; width: 100%; margin-bottom: 20px" placeholder="Enter your answer here..."></textarea>-->
     <button class="btn btn-outline-success" type="submit">Answer</button>
   </form>
 

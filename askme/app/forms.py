@@ -1,5 +1,5 @@
 from django import forms
-from .models import Profile, User, Question
+from .models import Profile, User, Question, Tag, Answer
 from django.db.models import ObjectDoesNotExist
 
 
@@ -49,7 +49,7 @@ class ProfileEditForm(forms.ModelForm):
         model = User
         fields = ["username", "email", "first_name", "last_name"]
 
-    def __init__(self, user_id, *args, **kwargs):
+    def __init__(self, user_id: int, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "Login"
         self.user_id = user_id
@@ -88,7 +88,50 @@ class ProfileEditForm(forms.ModelForm):
 
 
 class QuestionForm(forms.ModelForm):
+    tags = forms.CharField(required=False, max_length=150)
+
     class Meta:
         model = Question
-        fields = ["title", "text", "tags"]
+        fields = ["title", "text"]
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["tags"].widget.attrs["placeholder"] = "tag1, tag2, example"
+
+    def clean_tags(self):
+        tags_list = self.cleaned_data["tags"].split(",")
+        for tag in tags_list:
+            if len(tag.strip()) > 20:
+                raise forms.ValidationError("Exceeded the maximum tag length (20 characters)")
+        return self.cleaned_data["tags"]
+
+    def save(self, user: User) -> int:
+        tags_list = self.cleaned_data["tags"].split(",")
+        exists_tags = []
+        new_tags = []
+        for tag in tags_list:
+            tag_name = tag.strip()
+            try:
+                exists_tags.append(Tag.objects.get(name=tag_name))
+            except ObjectDoesNotExist:
+                new_tags.append(Tag(name=tag_name))
+        Tag.objects.bulk_create(new_tags)
+        question = Question(title=self.cleaned_data["title"], text=self.cleaned_data["text"], author=user.profile)
+        question.save()
+        question.tags.set(new_tags + exists_tags)
+        return question.id
+
+
+class AnswerForm(forms.ModelForm):
+    class Meta:
+        model = Answer
+        fields = ["text"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["text"].label = "Answer"
+
+    def save(self, user: User, question: Question) -> int:
+        answer = Answer(text=self.cleaned_data["text"], question=question, author=user.profile)
+        answer.save()
+        return answer.id

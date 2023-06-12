@@ -5,7 +5,7 @@ from django.db.models import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from .models import Question, Tag, Answer, Profile
 from django.urls import reverse
-from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm
+from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm, AnswerForm
 from django.contrib.auth.decorators import login_required
 
 
@@ -29,17 +29,28 @@ def index(request):
 
 
 def question(request, id: int):
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     try:
         question = Question.objects.get_by_id(id=id)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
+    if request.method == "GET":
+        answer_form = AnswerForm()
+    elif request.method == "POST":
+        answer_form = AnswerForm(request.POST)
+        if answer_form.is_valid():
+            answer_id = answer_form.save(request.user, question)
+            answers_cou = question.answers.count()
+            num_page = (answers_cou // 10) + 1
+            return HttpResponseRedirect(reverse("question", args=[id]) + f"?page={num_page}#answer-{answer_id}")
+
+    TAGS = Tag.objects.all()[:20]
+    MEMBERS = Profile.objects.best()
     answers = question.answers.all()
     context = {
         "question": question,
         "page_obj": paginate(answers, request),
         "tags": TAGS, "best_members": MEMBERS,
+        "form": answer_form,
     }
     if request.user.is_authenticated:
         context["user_data"] = request.user
@@ -139,6 +150,12 @@ def search_by_tag(request, tag: str):
 def ask(request):
     if request.method == "GET":
         question_form = QuestionForm()
+    elif request.method == "POST":
+        question_form = QuestionForm(request.POST)
+        if question_form.is_valid():
+            question_id = question_form.save(request.user)
+            return HttpResponseRedirect(reverse("question", args=[question_id]))
+
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
     context = {
