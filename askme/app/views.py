@@ -7,6 +7,7 @@ from .models import Question, Tag, Answer, Profile
 from django.urls import reverse
 from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm, AnswerForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 
 
 def paginate(objects_list, request, per_page=10):
@@ -28,6 +29,7 @@ def index(request):
     return render(request, "index.html", context)
 
 
+@require_http_methods(["GET", "POST"])
 def question(request, id: int):
     try:
         question = Question.objects.get_by_id(id=id)
@@ -35,7 +37,9 @@ def question(request, id: int):
         return HttpResponseNotFound()
     if request.method == "GET":
         answer_form = AnswerForm()
-    elif request.method == "POST":
+    else:
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse("login") + f"?continue={reverse('question', args=[id])}%23answer-form")
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
             answer_id = answer_form.save(request.user, question)
@@ -58,15 +62,14 @@ def question(request, id: int):
 
 
 @login_required(login_url="login", redirect_field_name="continue")
+@require_http_methods(["GET", "POST"])
 def setting(request):
     if request.method == "GET":
-        setting_form = ProfileEditForm(request.user.id, initial=dict(upload_avatar=request.user.profile.avatar,
-                                                                     username=request.user.username,
-                                                                     first_name=request.user.first_name,
-                                                                     last_name=request.user.last_name,
-                                                                     email=request.user.email))
-    elif request.method == "POST":
-        setting_form = ProfileEditForm(request.user.id, request.POST, request.FILES)
+        setting_form = ProfileEditForm(initial=dict(upload_avatar=request.user.profile.avatar,
+                                                    username=request.user.username, first_name=request.user.first_name,
+                                                    last_name=request.user.last_name, email=request.user.email))
+    else:
+        setting_form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if setting_form.is_valid():
             setting_form.save()
             return HttpResponseRedirect(reverse("settings"))
@@ -115,10 +118,11 @@ def log_in(request):
     return render(request, "login.html", context)
 
 
+@require_http_methods(["GET", "POST"])
 def signup(request):
     if request.method == "GET":
         register_form = RegisterForm()
-    elif request.method == "POST":
+    else:
         register_form = RegisterForm(request.POST, request.FILES)
         if register_form.is_valid():
             register_form.save()
@@ -147,10 +151,11 @@ def search_by_tag(request, tag: str):
 
 
 @login_required(login_url="login", redirect_field_name="continue")
+@require_http_methods(["GET", "POST"])
 def ask(request):
     if request.method == "GET":
         question_form = QuestionForm()
-    elif request.method == "POST":
+    else:
         question_form = QuestionForm(request.POST)
         if question_form.is_valid():
             question_id = question_form.save(request.user)

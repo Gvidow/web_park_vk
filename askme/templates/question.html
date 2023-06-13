@@ -1,5 +1,4 @@
 {% extends "inc/base.html" %}
-{% load static %}
 {% load bootstrap5 %}
 
 
@@ -26,7 +25,7 @@
     <div class="col-8">
       <h2> {{ question.title }} </h2>
       <div>
-          {{ question.text }}
+          {{ question.text|linebreaksbr }}
       </div>
       <div style="margin-top: 15px">
         Tags
@@ -49,7 +48,7 @@
   <!-- add answer-->
   <hr class="my-4">
 
-  <form method="post" action="#" style="margin-bottom: 10px" name="question">
+  <form id="answer-form" method="post" action="#" style="margin-bottom: 10px" name="question">
     {% csrf_token %}
     {% bootstrap_form form %}
 <!--    <textarea class="form-control me-2" type="search" rows="8" name="answer" style="resize: none; width: 100%; margin-bottom: 20px" placeholder="Enter your answer here..."></textarea>-->

@@ -1,5 +1,4 @@
 {% extends "inc/base.html" %}
-{% load static %}
 {% load bootstrap5 %}
 
 {% block info-user %}
@@ -15,7 +14,9 @@
   <form method="post" action="{% url 'settings' %}" enctype="multipart/form-data" name="settings">
     {% csrf_token %}
     {% bootstrap_form form %}
-
+    <div>
+      <img id="upload-avatar" src="{{ user_data.profile.avatar.url }}" alt="your avatar">
+    </div>
     <div class="row pole">
       <div class="col-3"></div>
       <div class="col-5">

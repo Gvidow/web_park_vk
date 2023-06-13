@@ -12,7 +12,7 @@ class ProfileManager(Manager):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT, related_name="profile")
-    avatar = models.ImageField(upload_to="static/img/avatar", default="static/img/default-avatar.jpg")
+    avatar = models.ImageField(upload_to="avatars/%Y/%m/%d/", default="default-avatar.jpg")
 
     def __str__(self):
         return f"{self.user.username[-1]} {self.user.first_name} {self.user.last_name} {self.id=}"

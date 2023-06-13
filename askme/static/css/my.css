@@ -105,3 +105,9 @@ main > .container {
 .valuation {
     margin-left: 15px;
 }
+
+#upload-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}

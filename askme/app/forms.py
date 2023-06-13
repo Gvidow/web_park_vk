@@ -40,6 +40,7 @@ class RegisterForm(forms.ModelForm):
             Profile(user=user).save()
         else:
             Profile(user=user, avatar=avatar).save()
+        return user
 
 
 class ProfileEditForm(forms.ModelForm):
@@ -49,10 +50,9 @@ class ProfileEditForm(forms.ModelForm):
         model = User
         fields = ["username", "email", "first_name", "last_name"]
 
-    def __init__(self, user_id: int, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "Login"
-        self.user_id = user_id
 
     def clean(self):
         return self.cleaned_data
@@ -63,12 +63,12 @@ class ProfileEditForm(forms.ModelForm):
             user = User.objects.get(username=username)
         except ObjectDoesNotExist:
             user = None
-        if isinstance(user, User) and user.id != self.user_id:
+        if isinstance(user, User) and user.id != self.instance.id:
             raise forms.ValidationError("A user with that username already exists.")
         return username
 
     def save(self):
-        user = User.objects.get(id=self.user_id)
+        user = super().save()
         if user.username != self.cleaned_data["username"] or \
                 user.first_name != self.cleaned_data["first_name"] or \
                 user.last_name != self.cleaned_data["last_name"] or \
@@ -85,6 +85,7 @@ class ProfileEditForm(forms.ModelForm):
                 avatar = Profile.avatar.field.default
             profile.avatar = avatar
             profile.save()
+        return user
 
 
 class QuestionForm(forms.ModelForm):
@@ -103,6 +104,8 @@ class QuestionForm(forms.ModelForm):
         for tag in tags_list:
             if len(tag.strip()) > 20:
                 raise forms.ValidationError("Exceeded the maximum tag length (20 characters)")
+            if len(tag.strip()) == 0:
+                raise forms.ValidationError("Empty tag")
         return self.cleaned_data["tags"]
 
     def save(self, user: User) -> int:
