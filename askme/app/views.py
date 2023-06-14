@@ -3,11 +3,13 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.db.models import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from .models import Question, Tag, Answer, Profile
+from .models import Question, Tag, Answer, Profile, Like
 from django.urls import reverse
 from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm, AnswerForm
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_http_methods, require_POST
+from pkg.ajax import login_required_ajax, HttpResponseAjax, HttpResponseAjaxError
+from django.db import transaction
 
 
 def paginate(objects_list, request, per_page=10):
@@ -49,7 +51,7 @@ def question(request, id: int):
 
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
-    answers = question.answers.all()
+    answers = question.answers.order_by("date")
     context = {
         "question": question,
         "page_obj": paginate(answers, request),
@@ -200,3 +202,68 @@ def best_users(request, id: int):
     if request.user.is_authenticated:
         context["user_data"] = request.user
     return render(request, "index.html", context)
+
+
+@login_required_ajax
+@require_POST
+@transaction.atomic
+def vote_up_question(request):
+    question_id = request.POST.get("question_id")
+    vote = request.POST.get("vote")
+
+    if question_id is None:
+        return HttpResponseAjaxError(code="notfound_id", message="question id required")
+    if vote is None:
+        return HttpResponseAjaxError(code="notfound_vote", message="vote required")
+
+    try:
+        question = Question.objects.get(id=question_id)
+        request.user.profile.likes.update_vote_question(request.user.profile, question, vote)
+        return HttpResponseAjax(count_likes=question.count_like(), count_dislikes=question.count_dislike())
+    except ObjectDoesNotExist:
+        return HttpResponseAjaxError(code="notfound_question", message="the issue with this id was not found")
+    except Exception as e:
+        return HttpResponseAjaxError(code="db_error", message=str(e))
+
+
+@login_required_ajax
+@require_POST
+def vote_up_answer(request):
+    answer_id = request.POST.get("answer_id")
+    vote = request.POST.get("vote")
+
+    if answer_id is None:
+        return HttpResponseAjaxError(code="notfound_id", message="answer id required")
+    if vote is None:
+        return HttpResponseAjaxError(code="notfound_vote", message="vote required")
+
+    try:
+        answer = Answer.objects.get(id=answer_id)
+        request.user.profile.likes.update_vote_answer(request.user.profile, answer, vote)
+        return HttpResponseAjax(count_likes=answer.count_like(), count_dislikes=answer.count_dislike())
+    except ObjectDoesNotExist:
+        return HttpResponseAjaxError(code="notfound_answer", message="the issue with this id was not found")
+    except Exception as e:
+        return HttpResponseAjaxError(code="db_error", message=str(e))
+
+
+@login_required_ajax
+@require_POST
+@transaction.atomic
+def correct(request):
+    answer_id = request.POST.get("answer_id")
+
+    if answer_id is None:
+        return HttpResponseAjaxError(code="notfound_id", message="answer id required")
+
+    try:
+        answer = Answer.objects.get(id=answer_id)
+        if request.user.profile != answer.author:
+            return HttpResponseAjaxError(code="no_rights",
+                                         message="only the author of the question can mark the correct questions")
+        answer.update_correct()
+        return HttpResponseAjax(correct=answer.correct)
+    except ObjectDoesNotExist:
+        return HttpResponseAjaxError(code="notfound_answer", message="the issue with this id was not found")
+    except Exception as e:
+        return HttpResponseAjaxError(code="db_error", message=str(e))

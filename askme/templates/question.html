@@ -1,4 +1,5 @@
 {% extends "inc/base.html" %}
+{% load static %}
 {% load bootstrap5 %}
 
 
@@ -23,7 +24,8 @@
 
     </div>
     <div class="col-8">
-      <h2> {{ question.title }} </h2>
+      <h2> {{ question.author.user.first_name }}  {{ question.author.user.last_name }} </h2>
+      <h3> {{ question.title }} </h3>
       <div>
           {{ question.text|linebreaksbr }}
       </div>
@@ -54,5 +56,9 @@
 <!--    <textarea class="form-control me-2" type="search" rows="8" name="answer" style="resize: none; width: 100%; margin-bottom: 20px" placeholder="Enter your answer here..."></textarea>-->
     <button class="btn btn-outline-success" type="submit">Answer</button>
   </form>
+
+  <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
+  <script src="{% static 'js/check_answer.js' %}" defer></script>
 
 {% endblock %}

@@ -2,11 +2,15 @@
 
 <div class="div-valuation">
   <div class="valuation like">
-    <button class="button-like"><img src="{% static 'img/like.svg' %}"></button>
+    <button class="button-like" data-id="{{ answer.id }}" data-object="answer"
+            data-url="{% url 'vote_up_answer' %}">
+      <img src="{% static 'img/like.svg' %}"></button>
     <span>{{ answer.count_like }}</span>
   </div>
   <div class="valuation dislike">
-    <button class="button-like"><img src="{% static 'img/dislike.svg' %}"></button>
+    <button class="button-dislike" data-id="{{ answer.id }}" data-object="answer"
+            data-url="{% url 'vote_up_answer' %}">
+      <img src="{% static 'img/dislike.svg' %}"></button>
     <span>{{ answer.count_dislike }}</span>
   </div>
 </div>

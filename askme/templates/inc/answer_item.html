@@ -13,7 +13,9 @@
             {{ answer.text|linebreaksbr }}
         </div>
         <div class="row">
-            <p><input class="correct" type="checkbox" name="correct" value="true" {% if answer.correct %} checked {% endif %}>Correct!</p>
+            <p><input class="correct" type="checkbox" name="correct" value="true"
+                      {% if answer.correct %} checked {% endif %} data-id="{{ answer.id }}"
+                      data-url="{% url 'correct' %}">Correct!</p>
         </div>
         </div>
     </div>

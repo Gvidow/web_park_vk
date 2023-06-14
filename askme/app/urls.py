@@ -14,6 +14,9 @@ urlpatterns = [
     path("ask/", ask, name="ask"),
     path("hot/", hot, name="hot"),
     path("best/<int:id>", best_users, name="best"),
+    path("vote_up/question/", vote_up_question, name="vote_up_question"),
+    path("vote_up/answer/", vote_up_answer, name="vote_up_answer"),
+    path("correct/", correct, name="correct"),
 ]
 
 if settings.DEBUG:

@@ -27,6 +27,28 @@ class Tag(models.Model):
         return f"{self.name}"
 
 
+class LikeManager(Manager):
+    def update_vote_question(self, profile, question, vote):
+        like = self.filter(question=question)
+        if len(like) == 0:
+            Like(from_whom=profile, question=question, event=vote).save()
+        elif like[0].event == vote:
+            like[0].delete()
+        else:
+            like[0].event = vote
+            like[0].save()
+
+    def update_vote_answer(self, profile, answer, vote):
+        like = self.filter(answer=answer)
+        if len(like) == 0:
+            Like(from_whom=profile, answer=answer, event=vote).save()
+        elif like[0].event == vote:
+            like[0].delete()
+        else:
+            like[0].event = vote
+            like[0].save()
+
+
 class Like(models.Model):
     from_whom = models.ForeignKey("Profile", on_delete=models.PROTECT, related_name="likes")
     question = models.ForeignKey("Question", on_delete=models.PROTECT, blank=True, null=True, related_name="likes")
@@ -37,6 +59,7 @@ class Like(models.Model):
         ("-", "dislike"),
     ]
     event = models.CharField(max_length=1, choices=choice)
+    objects = LikeManager()
 
     class Meta:
         unique_together = [('from_whom', 'question'), ('from_whom', 'answer')]
@@ -104,3 +127,7 @@ class Answer(models.Model):
 
     def count_dislike(self):
         return len(self.likes.filter(event="-"))
+
+    def update_correct(self):
+        self.correct = not self.correct
+        self.save()

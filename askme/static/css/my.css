@@ -61,7 +61,7 @@ main > .container {
   display: block;
 }
 
-.button-like {
+.button-like, .button-dislike {
     padding: 0;
     border: none;
     background: none;
@@ -69,7 +69,7 @@ main > .container {
     height: 30px;
     margin-top: 5%;
 }
-.button-like > img{
+.button-like > img, .button-dislike > img {
     width: 100%;
     height: 100%;
 }
