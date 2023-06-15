@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load bootstrap5 %}
+{% load static %}
 
 {% block info-user %}
   {% include "inc/is_authorized_user.html" %}
@@ -10,19 +11,22 @@
 {% endblock %}
 
 {% block content %}
-<div>
-  <form method="post" action="{% url 'settings' %}" enctype="multipart/form-data" name="settings">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <div>
-      <img id="upload-avatar" src="{{ user_data.profile.avatar.url }}" alt="your avatar">
-    </div>
-    <div class="row pole">
-      <div class="col-3"></div>
-      <div class="col-5">
-        <button class="btn btn-outline-success" type="submit">Save</button>
+  <div>
+    <form method="post" action="{% url 'settings' %}" enctype="multipart/form-data" name="settings">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <div>
+        <img id="upload-avatar" src="{{ user_data.profile.avatar.url }}" alt="your avatar">
       </div>
-    </div>
-  </form>
-</div>
+      <div class="row pole">
+        <div class="col-3"></div>
+        <div class="col-5">
+          <button class="btn btn-outline-success" type="submit">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
+  <script src="{% static 'js/avatar_show.js' %}" defer></script>
 {% endblock %}

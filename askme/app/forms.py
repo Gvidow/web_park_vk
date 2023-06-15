@@ -24,6 +24,7 @@ class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "Login"
+        self.fields["upload_avatar"].widget.attrs["id"] = "input-avatar"
 
     def clean_repeat_password(self):
         password = self.cleaned_data["password"]
@@ -53,6 +54,7 @@ class ProfileEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["username"].label = "Login"
+        self.fields["upload_avatar"].widget.attrs["id"] = "input-avatar"
 
     def clean(self):
         return self.cleaned_data
@@ -101,6 +103,8 @@ class QuestionForm(forms.ModelForm):
 
     def clean_tags(self):
         tags_list = self.cleaned_data["tags"].split(",")
+        if len(tags_list) == 1 and tags_list[0].strip() == "":
+            return ""
         for tag in tags_list:
             if len(tag.strip()) > 20:
                 raise forms.ValidationError("Exceeded the maximum tag length (20 characters)")
@@ -114,6 +118,8 @@ class QuestionForm(forms.ModelForm):
         new_tags = []
         for tag in tags_list:
             tag_name = tag.strip()
+            if tag_name == "":
+                continue
             try:
                 exists_tags.append(Tag.objects.get(name=tag_name))
             except ObjectDoesNotExist:

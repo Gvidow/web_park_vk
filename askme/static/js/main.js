@@ -15,7 +15,7 @@ function getCookie(name) {
 
 const csrftoken = getCookie('csrftoken');
 
-async function vote(vote, like_counter, dislike_counter) {
+async function vote(vote, btn_like, btn_dislike) {
     const request = new Request(
         $(this).data("url"),
         {
@@ -34,17 +34,28 @@ async function vote(vote, like_counter, dislike_counter) {
             if (response_json.status === "error") {
                 console.log(`error: ${response_json.message}`);
             } else {
-                like_counter.html(response_json.count_likes);
-                dislike_counter.html(response_json.count_dislikes);
+                btn_like.next().html(response_json.count_likes);
+                btn_dislike.next().html(response_json.count_dislikes);
+                console.log(response_json.valuation)
+                if (response_json.valuation === "like") {
+                    btn_like.css({"background": "#cccccc"})
+                    btn_dislike.css({"background": "none"})
+                } else if (response_json.valuation === "dislike") {
+                    btn_like.css({"background": "none"})
+                    btn_dislike.css({"background": "#cccccc"})
+                } else {
+                    btn_like.css({"background": "none"})
+                    btn_dislike.css({"background": "none"})
+                }
             }
         })
     );
 }
 
 $(".button-like").on("click", function (event) {
-    vote.bind(this)("%2B", $(this).next(), $(this).closest("div").next().children("span"));
+    vote.bind(this)("%2B", $(this), $(this).closest("div").next().children("button"));
 });
 
 $(".button-dislike").on("click", function (event) {
-    vote.bind(this)("-", $(this).closest("div").prev().children("span"), $(this).next());
+    vote.bind(this)("-", $(this).closest("div").prev().children("button"), $(this));
 });

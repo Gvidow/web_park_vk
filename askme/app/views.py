@@ -28,6 +28,8 @@ def index(request):
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
+        context["likes_question"] = request.user.profile.likes_question()
+        context["dislikes_question"] = request.user.profile.dislikes_question()
     return render(request, "index.html", context)
 
 
@@ -60,6 +62,11 @@ def question(request, id: int):
     }
     if request.user.is_authenticated:
         context["user_data"] = request.user
+        context["likes_question"] = [id] if request.user.profile.is_liked_question(id) else None
+        context["dislikes_question"] = [id] if context["likes_question"] is None and \
+                                            request.user.profile.is_disliked_question(id) else None
+        context["likes_answer"] = request.user.profile.likes_answer()
+        context["dislikes_answer"] = request.user.profile.dislikes_answer()
     return render(request, "question.html", context)
 
 
@@ -218,8 +225,9 @@ def vote_up_question(request):
 
     try:
         question = Question.objects.get(id=question_id)
-        request.user.profile.likes.update_vote_question(request.user.profile, question, vote)
-        return HttpResponseAjax(count_likes=question.count_like(), count_dislikes=question.count_dislike())
+        valuation = request.user.profile.likes.update_vote(request.user.profile, question, vote)
+        return HttpResponseAjax(count_likes=question.count_like(), count_dislikes=question.count_dislike(),
+                                valuation=valuation)
     except ObjectDoesNotExist:
         return HttpResponseAjaxError(code="notfound_question", message="the issue with this id was not found")
     except Exception as e:
@@ -239,8 +247,9 @@ def vote_up_answer(request):
 
     try:
         answer = Answer.objects.get(id=answer_id)
-        request.user.profile.likes.update_vote_answer(request.user.profile, answer, vote)
-        return HttpResponseAjax(count_likes=answer.count_like(), count_dislikes=answer.count_dislike())
+        valuation = request.user.profile.likes.update_vote(request.user.profile, answer, vote)
+        return HttpResponseAjax(count_likes=answer.count_like(), count_dislikes=answer.count_dislike(),
+                                valuation=valuation)
     except ObjectDoesNotExist:
         return HttpResponseAjaxError(code="notfound_answer", message="the issue with this id was not found")
     except Exception as e:

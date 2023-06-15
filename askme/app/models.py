@@ -19,6 +19,24 @@ class Profile(models.Model):
 
     objects = ProfileManager()
 
+    def likes_question(self):
+        return self.likes.list_id_vote("question", "+")
+
+    def dislikes_question(self):
+        return self.likes.list_id_vote("question", "-")
+
+    def likes_answer(self):
+        return self.likes.list_id_vote("answer", "+")
+
+    def dislikes_answer(self):
+        return self.likes.list_id_vote("answer", "-")
+
+    def is_liked_question(self, id: int):
+        return len(self.likes.filter(question_id=id, event="+")) != 0
+
+    def is_disliked_question(self, id: int):
+        return len(self.likes.filter(question_id=id, event="-")) != 0
+
 
 class Tag(models.Model):
     name = models.CharField(max_length=20, unique=True)
@@ -28,25 +46,26 @@ class Tag(models.Model):
 
 
 class LikeManager(Manager):
-    def update_vote_question(self, profile, question, vote):
-        like = self.filter(question=question)
+    def update_vote(self, profile, obj, vote):
+        object_type = "question" if isinstance(obj, Question) else "answer"
+        like = self.filter(**{object_type: obj})
         if len(like) == 0:
-            Like(from_whom=profile, question=question, event=vote).save()
+            Like(from_whom=profile, event=vote, **{object_type: obj}).save()
+            if vote == "+":
+                return "like"
+            return "dislike"
         elif like[0].event == vote:
             like[0].delete()
+            return None
         else:
             like[0].event = vote
             like[0].save()
+            if vote == "+":
+                return "like"
+            return "dislike"
 
-    def update_vote_answer(self, profile, answer, vote):
-        like = self.filter(answer=answer)
-        if len(like) == 0:
-            Like(from_whom=profile, answer=answer, event=vote).save()
-        elif like[0].event == vote:
-            like[0].delete()
-        else:
-            like[0].event = vote
-            like[0].save()
+    def list_id_vote(self, obj_name, vote):
+        return self.exclude(**{obj_name: None}).filter(event=vote).values_list(obj_name+"_id", flat=True)
 
 
 class Like(models.Model):

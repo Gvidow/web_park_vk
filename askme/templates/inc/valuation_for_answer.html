@@ -3,13 +3,15 @@
 <div class="div-valuation">
   <div class="valuation like">
     <button class="button-like" data-id="{{ answer.id }}" data-object="answer"
-            data-url="{% url 'vote_up_answer' %}">
+            data-url="{% url 'vote_up_answer' %}"
+            {% if likes_answer and answer.id in likes_answer %} style="background: #cccccc" {% endif %}>
       <img src="{% static 'img/like.svg' %}"></button>
     <span>{{ answer.count_like }}</span>
   </div>
   <div class="valuation dislike">
     <button class="button-dislike" data-id="{{ answer.id }}" data-object="answer"
-            data-url="{% url 'vote_up_answer' %}">
+            data-url="{% url 'vote_up_answer' %}"
+            {% if dislikes_answer and answer.id in dislikes_answer %} style="background: #cccccc" {% endif %}>
       <img src="{% static 'img/dislike.svg' %}"></button>
     <span>{{ answer.count_dislike }}</span>
   </div>
