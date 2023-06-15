@@ -1,4 +1,5 @@
 {% extends "inc/base.html" %}
+{% load static %}
 
 {% block info-user %}
     {% if user_data %}
@@ -19,5 +20,8 @@
   {% endfor %}
 
   {% include "inc/paginator.html" %}
+
+  <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
 
 {% endblock %}
