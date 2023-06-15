@@ -19,5 +19,7 @@ urlpatterns = [
     path("correct/", correct, name="correct"),
 ]
 
-if settings.DEBUG:
-    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
+# if settings.DEBUG:
+#     urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
+#
+#     urlpatterns.extend(static(settings.STATIC_URL, document_root=settings.STATIC_ROOT))
