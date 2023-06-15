@@ -156,6 +156,8 @@ def search_by_tag(request, tag: str):
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
+        context["likes_question"] = request.user.profile.likes_question()
+        context["dislikes_question"] = request.user.profile.dislikes_question()
     return render(request, "tag.html", context)
 
 
@@ -191,6 +193,8 @@ def hot(request):
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
+        context["likes_question"] = request.user.profile.likes_question()
+        context["dislikes_question"] = request.user.profile.dislikes_question()
     return render(request, "hot.html", context)
 
 
@@ -208,6 +212,8 @@ def best_users(request, id: int):
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
+        context["likes_question"] = request.user.profile.likes_question()
+        context["dislikes_question"] = request.user.profile.dislikes_question()
     return render(request, "index.html", context)
 
 
