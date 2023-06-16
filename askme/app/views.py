@@ -10,6 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
 from pkg.ajax import login_required_ajax, HttpResponseAjax, HttpResponseAjaxError
 from django.db import transaction
+from cent import Client
+from django.forms import model_to_dict
+from askme.settings import CENTRIFUGO_ADDR
 
 
 def paginate(objects_list, request, per_page=10):
@@ -33,8 +36,13 @@ def index(request):
     return render(request, "index.html", context)
 
 
+client = Client(CENTRIFUGO_ADDR + "/api", api_key="apikey", timeout=1)
+
 @require_http_methods(["GET", "POST"])
 def question(request, id: int):
+    print("=====QUESTION=======")
+    print(CENTRIFUGO_ADDR)
+    chan_id = f"question_{id}"
     try:
         question = Question.objects.get_by_id(id=id)
     except ObjectDoesNotExist:
@@ -46,10 +54,12 @@ def question(request, id: int):
             return HttpResponseRedirect(reverse("login") + f"?continue={reverse('question', args=[id])}%23answer-form")
         answer_form = AnswerForm(request.POST)
         if answer_form.is_valid():
-            answer_id = answer_form.save(request.user, question)
+            answer = answer_form.save(request.user, question)
+            print(answer, type(answer), model_to_dict(answer))
+            client.publish(f"question_{id}", model_to_dict(answer))
             answers_cou = question.answers.count()
             num_page = (answers_cou // 10) + 1
-            return HttpResponseRedirect(reverse("question", args=[id]) + f"?page={num_page}#answer-{answer_id}")
+            return HttpResponseRedirect(reverse("question", args=[id]) + f"?page={num_page}#answer-{answer.id}")
 
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
@@ -135,6 +145,9 @@ def signup(request):
         register_form = RegisterForm(request.POST, request.FILES)
         if register_form.is_valid():
             register_form.save()
+            user = auth.authenticate(request, **register_form.cleaned_data)
+            if user:
+                auth.login(request, user)
             return HttpResponseRedirect("/")
     TAGS = Tag.objects.all()[:20]
     MEMBERS = Profile.objects.best()
