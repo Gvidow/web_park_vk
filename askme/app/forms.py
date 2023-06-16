@@ -140,7 +140,7 @@ class AnswerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["text"].label = "Answer"
 
-    def save(self, user: User, question: Question) -> int:
+    def save(self, user: User, question: Question) -> Answer:
         answer = Answer(text=self.cleaned_data["text"], question=question, author=user.profile)
         answer.save()
-        return answer.id
+        return answer
