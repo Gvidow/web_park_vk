@@ -52,10 +52,14 @@ async function vote(vote, btn_like, btn_dislike) {
     );
 }
 
-$(".button-like").on("click", function (event) {
+function click_like(event) {
     vote.bind(this)("%2B", $(this), $(this).closest("div").next().children("button"));
-});
+}
 
-$(".button-dislike").on("click", function (event) {
+function click_dislike(event) {
     vote.bind(this)("-", $(this).closest("div").prev().children("button"), $(this));
-});
+}
+
+$(".button-like").on("click", click_like);
+
+$(".button-dislike").on("click", click_dislike);

@@ -40,10 +40,11 @@
   <hr class="my-4">
 
   <!--          ответы -->
-  
-  {% for answer in page_obj %}
-    {% include "inc/answer_item.html" %}
-  {% endfor %}
+  <div id="list-answers">
+    {% for answer in page_obj %}
+      {% include "inc/answer_item.html" %}
+    {% endfor %}
+  </div>
 
   {% include "inc/paginator.html" %}
 
@@ -53,12 +54,17 @@
   <form id="answer-form" method="post" action="#" style="margin-bottom: 10px" name="question">
     {% csrf_token %}
     {% bootstrap_form form %}
-<!--    <textarea class="form-control me-2" type="search" rows="8" name="answer" style="resize: none; width: 100%; margin-bottom: 20px" placeholder="Enter your answer here..."></textarea>-->
+
     <button class="btn btn-outline-success" type="submit">Answer</button>
   </form>
+
+  <div id="centrifugo-conf" style="display: none"
+    data-address="{{ server_address }}" data-chan="{{ chan_id }}" data-token="{{ secret_token }}"></div>
 
   <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
   <script src="{% static 'js/main.js' %}" defer></script>
   <script src="{% static 'js/check_answer.js' %}" defer></script>
+  <script src="{% static 'js/centrifuge.js' %}" defer></script>
+  <script src="{% static 'js/real-time-answer.js' %}" defer></script>
 
 {% endblock %}

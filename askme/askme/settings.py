@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'bootstrap5',
 ]
 
@@ -136,3 +137,15 @@ LOGIN_URL = "/login"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+CENTRIFUGO_HOST = "127.0.0.1:8001"
+TOKEN_HMAC_SECRET_KEY = "tokenhmacsecretkey"
+API_KEY = "apikey"
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+    },
+}
