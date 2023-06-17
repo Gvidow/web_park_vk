@@ -38,8 +38,15 @@ class Profile(models.Model):
         return len(self.likes.filter(question_id=id, event="-")) != 0
 
 
+class TagManager(Manager):
+    def popular_tags(self):
+        return self.annotate(count_question=Count("questions")).order_by("-count_question")[:20]
+
+
 class Tag(models.Model):
     name = models.CharField(max_length=20, unique=True)
+
+    objects = TagManager()
 
     def __str__(self):
         return f"{self.name}"

@@ -3,15 +3,16 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.db.models import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, HttpResponseNotFound
-from .models import Question, Tag, Answer, Profile, Like
+from django.core.cache import cache
 from django.urls import reverse
-from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm, AnswerForm
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_POST
-from pkg.ajax import login_required_ajax, HttpResponseAjax, HttpResponseAjaxError
-from django.db import transaction
-from cent import Client
 from django.forms import model_to_dict
+from django.db import transaction
+from .models import Question, Tag, Answer, Profile, Like
+from .forms import LoginForm, RegisterForm, ProfileEditForm, QuestionForm, AnswerForm
+from pkg.ajax import login_required_ajax, HttpResponseAjax, HttpResponseAjaxError
+from cent import Client
 from askme.settings import CENTRIFUGO_HOST, TOKEN_HMAC_SECRET_KEY, API_KEY
 import jwt
 import time
@@ -25,11 +26,9 @@ def paginate(objects_list, request, per_page=10):
 
 def index(request):
     questions = Question.objects.get_questions_all()
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     context = {"page_obj": paginate(questions, request),
-               "tags": TAGS,
-               "best_members": MEMBERS,
+               "tags": cache.get("popular_tags"),
+               "best_members": cache.get("rating_users"),
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
@@ -62,14 +61,12 @@ def question(request, id: int):
             num_page = (answers_cou // 10) + 1
             return HttpResponseRedirect(reverse("question", args=[id]) + f"?page={num_page}#answer-{answer.id}")
 
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     answers = question.answers.order_by("date")
 
     context = {
         "question": question,
         "page_obj": paginate(answers, request),
-        "tags": TAGS, "best_members": MEMBERS,
+        "tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
         "form": answer_form,
         "server_address": f"ws://{CENTRIFUGO_HOST}/connection/websocket",
         "chan_id": chan_id,
@@ -99,10 +96,8 @@ def setting(request):
             setting_form.save()
             return HttpResponseRedirect(reverse("settings"))
 
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     context = {
-        "tags": TAGS, "best_members": MEMBERS,
+        "tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
         "form": setting_form,
     }
     if request.user.is_authenticated:
@@ -133,11 +128,10 @@ def log_in(request):
                 login_form.add_error(None, "Incorrect login or password")
 
     setattr(login_form, "continue_url", continue_url)
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
+
     context = {
-        "tags": TAGS,
-        "best_members": MEMBERS,
+        "tags": cache.get("popular_tags"),
+        "best_members": cache.get("rating_users"),
         "form": login_form,
     }
     return render(request, "login.html", context)
@@ -155,9 +149,8 @@ def signup(request):
             if user:
                 auth.login(request, user)
             return HttpResponseRedirect("/")
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
-    context = {"tags": TAGS, "best_members": MEMBERS,
+
+    context = {"tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
                "form": register_form}
     return render(request, "register.html", context)
 
@@ -167,11 +160,10 @@ def search_by_tag(request, tag: str):
         questions = Question.objects.by_tag(tag)
     except ObjectDoesNotExist:
         return HttpResponseNotFound()
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
+
     context = {"page_obj": paginate(questions, request),
                "tag": tag,
-               "tags": TAGS, "best_members": MEMBERS,
+               "tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
@@ -191,11 +183,9 @@ def ask(request):
             question_id = question_form.save(request.user)
             return HttpResponseRedirect(reverse("question", args=[question_id]))
 
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     context = {
-        "tags": TAGS,
-        "best_members": MEMBERS,
+        "tags": cache.get("popular_tags"),
+        "best_members": cache.get("rating_users"),
         "form": question_form,
     }
     if request.user.is_authenticated:
@@ -205,10 +195,8 @@ def ask(request):
 
 def hot(request):
     questions = Question.objects.hot_questions()
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     context = {"page_obj": paginate(questions, request),
-               "tags": TAGS, "best_members": MEMBERS,
+               "tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
@@ -224,10 +212,8 @@ def best_users(request, id: int):
         return HttpResponseNotFound()
 
     questions = profile.questions.all()
-    TAGS = Tag.objects.all()[:20]
-    MEMBERS = Profile.objects.best()
     context = {"page_obj": paginate(questions, request),
-               "tags": TAGS, "best_members": MEMBERS,
+               "tags": cache.get("popular_tags"), "best_members": cache.get("rating_users"),
                }
     if request.user.is_authenticated:
         context["user_data"] = request.user
