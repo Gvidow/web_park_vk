@@ -33,7 +33,7 @@ get_html = (answer_id, avatar, text) => { return `
             <div class="row">
                 <p><input class="correct" type="checkbox" name="correct" value="true"
                         data-id="${answer_id}"
-                        data-url="/correct">Correct!</p>
+                        data-url="/correct/">Correct!</p>
             </div>
         </div>
     </div>
@@ -45,6 +45,8 @@ function add_listener_new_answer(answer_id) {
     const vote_div = $(`#answer-${answer_id}`).children("div").children("div").children("div").next();
     vote_div.children("div").children(".button-like").on("click", click_like);
     vote_div.children("div").next().children(".button-dislike").on("click", click_dislike);
+    $(`#answer-${answer_id}`).children("div").children(".col-8").children(".row").children("p")
+        .children("input").on("click", click_correct);
 }
 
 const conf = $("#centrifugo-conf");

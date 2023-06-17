@@ -1,4 +1,4 @@
-$(".correct").on("click", function (event) {
+function click_correct(event) {
     const request = new Request(
         $(this).data("url"),
         {
@@ -22,4 +22,6 @@ $(".correct").on("click", function (event) {
             }
     ));
     return false;
-});
+}
+
+$(".correct").on("click", click_correct);
