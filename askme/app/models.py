@@ -92,7 +92,7 @@ class QuestionManager(Manager):
     def get_by_id(self, id: int):
         return Question.objects.get(id=id)
     def get_questions_all(self):
-        return Question.objects.order_by("date")
+        return Question.objects.order_by("-date")
 
     def by_tag(self, tag_name: str):
         return Tag.objects.get(name=tag_name).questions.all().order_by("date")
