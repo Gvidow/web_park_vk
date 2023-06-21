@@ -1,9 +1,7 @@
 from django.db import models
-from django.db.models import Manager, Count, UniqueConstraint
+from django.db.models import Manager, Count
 from django.contrib.auth.models import User
 from random import choice
-from django.utils import timezone
-from datetime import timedelta
 
 
 class ProfileManager(Manager):
@@ -51,14 +49,13 @@ class QuestionManager(Manager):
     def get_by_id(self, id: int):
         return Question.objects.get(id=id)
     def get_questions_all(self):
-        return Question.objects.order_by("date")
+        return Question.objects.order_by("-date")
 
     def by_tag(self, tag_name: str):
-        return Tag.objects.get(name=tag_name).questions.all().order_by("date")
+        return Tag.objects.get(name=tag_name).questions.all().order_by("-date")
 
     def hot_questions(self):
-        return Question.objects.filter(date__gte=timezone.now() - timedelta(days=7))\
-            .annotate(count_answers=Count("answers"))
+        return self.annotate(count_likes=Count("likes")).order_by("-count_likes", "-date")
 
 
 class Question(models.Model):
@@ -85,7 +82,7 @@ class Question(models.Model):
 
 class AnswerManage(Manager):
     def answers_to_question(self, question):
-        return Question.objects.get(id=question).answers
+        return Question.objects.get(id=question).answers.order_by("-date")
 
 
 class Answer(models.Model):

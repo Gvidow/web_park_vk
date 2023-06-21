@@ -77,7 +77,7 @@ def fill(ratio):
 
     # LIKE FOR QUESTION
     likes = [Like(from_whom=users[i // 100].profile,
-                  question=questions[i // 10],
+                  question=questions[100 * (i // 1000) + i % 100],
                   event=choice(("+", "-")))
              for i in range(Count.CONTENT_LIKES // 2)]
     Like.objects.bulk_create(likes)
