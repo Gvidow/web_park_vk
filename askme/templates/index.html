@@ -1,0 +1,28 @@
+{% extends "inc/base.html" %}
+{% load static %}
+
+{% block info-user %}
+    {% if user_data %}
+        {% include "inc/is_authorized_user.html" %}
+    {% else %}
+        {% include "inc/not_authorized_user.html" %}
+    {% endif %}
+{% endblock %}
+
+{% block first-row %}
+  <h1 class="mt-5" style="display: inline; margin-right: 30px">New questions</h1>
+  <h3 style="display: inline;"><a href="{% url 'hot' %}" style="text-decoration: none">Hot questions</a></h3>
+{% endblock %}
+
+{%block content %}
+
+  {% for question in page_obj %}
+    {% include "inc/question_item.html" %}
+  {% endfor %}
+
+  {% include "inc/paginator.html" %}
+
+  <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
+
+{% endblock %}

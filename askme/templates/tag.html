@@ -1,0 +1,27 @@
+{% extends "inc/base.html" %}
+{% load static %}
+
+{% block info-user %}
+    {% if user_data %}
+        {% include "inc/is_authorized_user.html" %}
+    {% else %}
+        {% include "inc/not_authorized_user.html" %}
+    {% endif %}
+{% endblock %}
+
+{% block first-row %}
+  <h1 class="mt-5">Tag: {{ tag }}</h1>
+{% endblock %}
+
+{%block content %}
+
+  {% for question in page_obj %}
+    {% include "inc/question_item.html" %}
+  {% endfor %}
+
+  {% include "inc/paginator.html" %}
+
+  <script src="{% static 'js/jquery-3.7.0.min.js' %}" defer></script>
+  <script src="{% static 'js/main.js' %}" defer></script>
+
+{% endblock %}

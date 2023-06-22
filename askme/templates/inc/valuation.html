@@ -1,0 +1,18 @@
+{% load static %}
+
+<div class="div-valuation">
+  <div class="valuation like">
+    <button class="button-like" data-id="{{ question.id }}" data-object="question"
+            data-url="{% url 'vote_up_question' %}"
+            {% if likes_question and question.id in likes_question %} style="background: #cccccc" {% endif %}>
+      <img src="{% static 'img/like.svg' %}"></button>
+    <span>{{ question.count_like }}</span>
+  </div>
+  <div class="valuation dislike">
+    <button class="button-dislike" data-id="{{ question.id }}" data-object="question"
+            data-url="{% url 'vote_up_question' %}"
+            {% if dislikes_question and question.id in dislikes_question %} style="background: #cccccc" {% endif %}>
+      <img src="{% static 'img/dislike.svg' %}"></button>
+    <span>{{ question.count_dislike }}</span>
+  </div>
+</div>

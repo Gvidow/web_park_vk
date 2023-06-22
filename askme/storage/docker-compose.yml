@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: askme_db
+    environment:
+      POSTGRES_USER: artem
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_DB: askme
+    volumes:
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - 5432:5432
